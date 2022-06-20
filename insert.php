@@ -6,25 +6,18 @@ $fteacher=$_POST['fteacher'];
 $dv1=$_POST['dv1'];
 $dv2=$_POST['dv2'];
 $occ=$_POST['occ'];
-$cv=$_POST['cv'];
 $phonenumber=$_POST['phonenumber'];
-$email=$_POST['email'];
-if(!empty ($name)|| !($yoe)|| !($yog)|| !($fteacher)|| !($dv1)|| !($dv2)|| !($occ)|| !($cv )|| !($phonenumber)|| !($email)){
-    $host="local host";
-    $dbname="";
-    $dbyoe="";
-    $dbyog="";
-    $dbfteacher="";
-    $dbdv1="";
-    $dbdv2="";
-    $dbocc="";
-    $dbcv="";
-    $dbphonenumber="";
-    $dbemail="";
-    $dbname="alumni"
-    $conn=new mysqli($host, $dbname, $dbyoe, $dbyog, $dbfteacher, $dbdv1, $dbdv2, $dbocc, $dbcv, $dbphonenumber, $dbemail, $dbname)
+$email=$_POST['email']; $conn=new mysqli('localhost','root','','alumni');
+if($conn->connect_error){
+    die('connection failed :'.$conn->connect_error);
 }else{
-    echo "All fields are required";
-    die();
+    $stmt = $conn->prepare("insert into registration(name, yoe, yog, fteacher, dv1, dv2, occ, phonenumber, email)"
+                          values(?, ?, ?, ?, ?, ?, ?, ?, ?));
+    $stmt->bind_param("sssssssis", $name, $yoe, $yog, $fteacher, $dv1, $dv2, $occ, $phonenumber, $email);
+    $stmt->execute();
+    echo "registration successfully...";
+    $stmt->close();
+    $conn->close();
 }
+
 ?>
